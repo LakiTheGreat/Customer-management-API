@@ -1,7 +1,13 @@
 import express from "express";
-import { getCustomers, getOneCustomer } from "../coontrollers";
+
 import checkIdFormat from "../middleware/checkIdFormat";
-import { createCustomer } from "../coontrollers/customer.controller";
+import {
+  getCustomers,
+  getOneCustomer,
+  createCustomer,
+  deleteCustomer,
+  patchCustomer,
+} from "../coontrollers/customer.controller";
 
 const router = express.Router();
 
@@ -13,5 +19,7 @@ router.param("id", checkIdFormat);
 router.get("/", getCustomers);
 router.post("/", createCustomer);
 router.get("/:id", getOneCustomer);
+router.patch("/:id", patchCustomer);
+router.delete("/:id", deleteCustomer);
 
 export default router;
