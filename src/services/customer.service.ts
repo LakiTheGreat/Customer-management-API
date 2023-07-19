@@ -1,8 +1,21 @@
 import { CustomerModel } from "../models/customer.model";
 import { Customer } from "../types/customer";
 
+const findCustomers = () => {
+  const customers = CustomerModel.find({ deleted: { $ne: true } });
+  return customers;
+};
+
+const findOneCustomer = async (id: string) => {
+  const customer = await CustomerModel.findOne({
+    _id: id,
+    deleted: { $ne: true },
+  });
+  return customer;
+};
+
 export const getAllCustomersService = async () => {
-  const customers = await CustomerModel.find({ deleted: { $ne: true } });
+  const customers = await findCustomers();
 
   if (!customers.length) {
     return { message: "There are no customers in the database" };
@@ -11,10 +24,7 @@ export const getAllCustomersService = async () => {
 };
 
 export const getOneCustomerService = async (id: string) => {
-  const customer = await CustomerModel.findOne({
-    _id: id,
-    deleted: { $ne: true },
-  });
+  const customer = await findOneCustomer(id);
 
   if (!customer) {
     return { message: "User with that ID doesn't exist or is deleted" };
@@ -27,15 +37,21 @@ export const createCustomerService = async (customer: Customer) => {
   return CustomerModel.create(customer);
 };
 
-export const patchCustomerService = async (id: string, customer: Customer) => {
-  return CustomerModel.findByIdAndUpdate(id, customer, { new: true });
+export const patchCustomerService = async (
+  id: string,
+  updatedCustomer: Customer
+) => {
+  const customer = await findOneCustomer(id);
+
+  if (!customer) {
+    return { message: "User with that ID doesn't exist or is deleted" };
+  }
+
+  return CustomerModel.findByIdAndUpdate(id, updatedCustomer, { new: true });
 };
 
 export const deleteCustomerService = async (id: string) => {
-  const existingCustomer = await CustomerModel.findOne({
-    _id: id,
-    deleted: { $ne: true },
-  });
+  const existingCustomer = await findOneCustomer(id);
 
   if (!existingCustomer) {
     return { message: "Customer was not found or is already deleted." };
