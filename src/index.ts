@@ -1,7 +1,11 @@
-import app from "./app";
+import mongoose from "mongoose";
 
-//TEMP
-const port = process.env.PORT;
-app.listen(port, () => {
-  console.log(`App running on port ${port}...`);
+import app from "./app";
+import { mongooseObj } from "./config";
+
+mongoose.connect(mongooseObj.url, mongooseObj.options).then(() => {
+  console.log("Connected to MongoDB");
+  app.listen(process.env.PORT, () => {
+    console.log(`App running on port ${process.env.PORT}...`);
+  });
 });

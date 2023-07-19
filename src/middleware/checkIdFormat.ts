@@ -6,10 +6,10 @@ export default function checkIdFormat(
   next: NextFunction,
   id: string
 ) {
-  // Regular expression to match only numerical strings
-  const numericPattern = /^\d+$/;
+  // Regular expression to match MongoDB ObjectId format
+  const objectIdPattern = /^[0-9a-fA-F]{24}$/;
 
-  if (!id || !numericPattern.test(id)) {
+  if (!id || !objectIdPattern.test(id)) {
     return res
       .status(400)
       .json({ message: "Invalid 'id' format. 'id' must be a valid number." });
