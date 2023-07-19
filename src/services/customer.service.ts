@@ -1,7 +1,7 @@
 import { CustomerModel } from "../models/customer.model";
 import { Customer } from "../types/customer";
 
-export const getCustomersService = async () => {
+export const getAllCustomersService = async () => {
   const customers = await CustomerModel.find({ deleted: { $ne: true } });
 
   if (!customers.length) {

@@ -3,14 +3,14 @@ import { Request, Response } from "express";
 import {
   createCustomerService,
   deleteCustomerService,
-  getCustomersService,
+  getAllCustomersService,
   getOneCustomerService,
   patchCustomerService,
 } from "../services";
 
 export const getCustomers = async (req: Request, res: Response) => {
   try {
-    const customers = await getCustomersService();
+    const customers = await getAllCustomersService();
     res.status(200).json(customers);
   } catch (error) {
     res.status(404).json({ message: error });
