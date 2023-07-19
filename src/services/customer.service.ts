@@ -4,10 +4,9 @@ import { Customer } from "../types/customer";
 export const getCustomersService = async () => {
   const customers = await CustomerModel.find({ deleted: { $ne: true } });
 
-  if (customers.length === 0) {
+  if (!customers.length) {
     return { message: "There are no customers in the database" };
   }
-
   return customers;
 };
 
@@ -16,6 +15,7 @@ export const getOneCustomerService = async (id: string) => {
     _id: id,
     deleted: { $ne: true },
   });
+
   if (!customer) {
     return { message: "User with that ID doesn't exist or is deleted" };
   }
@@ -38,7 +38,7 @@ export const deleteCustomerService = async (id: string) => {
   });
 
   if (!existingCustomer) {
-    return { message: "Customer not found or already deleted." };
+    return { message: "Customer was not found or is already deleted." };
   }
 
   return CustomerModel.findByIdAndUpdate(id, { deleted: true });
