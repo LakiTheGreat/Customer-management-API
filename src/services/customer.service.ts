@@ -1,61 +1,78 @@
+import { JSEND_STATUS } from "../constants";
 import { CustomerModel } from "../models/customer.model";
 import { Customer } from "../types/customer";
 
-const findCustomers = () => {
-  const customers = CustomerModel.find({ deleted: { $ne: true } });
-  return customers;
-};
-
-const findOneCustomer = async (id: string) => {
-  const customer = await CustomerModel.findOne({
+export const findOneCustomer = (id: string) => {
+  return CustomerModel.findOne({
     _id: id,
     deleted: { $ne: true },
   });
-  return customer;
 };
 
 export const getAllCustomersService = async () => {
-  const customers = await findCustomers();
-
-  if (!customers.length) {
-    return { message: "There are no customers in the database" };
-  }
-  return customers;
+  const customers = await CustomerModel.find({ deleted: { $ne: true } });
+  return {
+    status: JSEND_STATUS.SUCCESS,
+    message: "List of all customers",
+    data: customers,
+  };
 };
 
 export const getOneCustomerService = async (id: string) => {
   const customer = await findOneCustomer(id);
 
-  if (!customer) {
-    return { message: "User with that ID doesn't exist or is deleted" };
-  }
-
-  return customer;
+  return {
+    status: JSEND_STATUS.SUCCESS,
+    message: "Customer for the provided ID",
+    data: customer,
+  };
 };
 
 export const createCustomerService = async (customer: Customer) => {
-  return CustomerModel.create(customer);
+  const newCustomer = await CustomerModel.create(customer);
+  return {
+    status: JSEND_STATUS.SUCCESS,
+    message: "Created customer",
+    data: newCustomer,
+  };
 };
 
 export const patchCustomerService = async (
   id: string,
   updatedCustomer: Customer
 ) => {
-  const customer = await findOneCustomer(id);
+  const patchedCustomer = await CustomerModel.findByIdAndUpdate(
+    id,
+    updatedCustomer,
+    { new: true }
+  );
 
-  if (!customer) {
-    return { message: "User with that ID doesn't exist or is deleted" };
-  }
-
-  return CustomerModel.findByIdAndUpdate(id, updatedCustomer, { new: true });
+  return {
+    status: JSEND_STATUS.SUCCESS,
+    message: "Customer is patched",
+    data: patchedCustomer,
+  };
 };
 
 export const deleteCustomerService = async (id: string) => {
   const existingCustomer = await findOneCustomer(id);
 
   if (!existingCustomer) {
-    return { message: "Customer was not found or is already deleted." };
+    return {
+      status: JSEND_STATUS.FAIL,
+      message:
+        "Customer for the provided ID was not found or is already deleted.",
+      data: [],
+    };
   }
 
-  return CustomerModel.findByIdAndUpdate(id, { deleted: true });
+  const deletedCustomer = await CustomerModel.findByIdAndUpdate(id, {
+    deleted: true,
+  });
+
+  return {
+    status: JSEND_STATUS.SUCCESS,
+    message: "Customer for the provided ID was successfuly deleted",
+    data: deletedCustomer,
+  };
 };

@@ -5,7 +5,7 @@ export const router = express.Router();
 
 const routes = [
   {
-    path: "/customer",
+    path: "/customers",
     route: customerRoute,
   },
 ];

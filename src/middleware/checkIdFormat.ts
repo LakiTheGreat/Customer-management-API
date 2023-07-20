@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { JSEND_STATUS } from "../constants";
 
 export default function checkIdFormat(
   req: Request,
@@ -10,9 +11,11 @@ export default function checkIdFormat(
   const objectIdPattern = /^[0-9a-fA-F]{24}$/;
 
   if (!id || !objectIdPattern.test(id)) {
-    return res
-      .status(400)
-      .json({ message: "Invalid 'id' format. 'id' must be a valid number." });
+    return res.status(400).json({
+      status: JSEND_STATUS.FAIL,
+      message: "Invalid 'id' format",
+      data: [],
+    });
   }
   next();
 }
