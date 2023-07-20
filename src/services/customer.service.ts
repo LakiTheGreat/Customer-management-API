@@ -66,10 +66,13 @@ export const deleteCustomerService = async (id: string) => {
     };
   }
 
-  const deletedCustomer = await CustomerModel.findByIdAndUpdate(id, {
-    deleted: true,
-  });
-
+  const deletedCustomer = await CustomerModel.findByIdAndUpdate(
+    id,
+    {
+      deleted: true,
+    },
+    { new: true }
+  );
   return {
     status: JSEND_STATUS.SUCCESS,
     message: "Customer for the provided ID was successfuly deleted",
