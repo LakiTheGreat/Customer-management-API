@@ -6,6 +6,7 @@ import { mongooseObj } from "../src/config";
 import { ROUTES } from "../src/constants";
 
 let tempId = "";
+let wrongId = "111111111111111111111111";
 
 // Connect to the test database before running the tests
 beforeAll(async () => {
@@ -17,7 +18,7 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-describe("API endpoint testing", () => {
+describe("API endpoint testing - status 200", () => {
   it("POST create customer", async () => {
     const newCustomer = {
       firstName: "John",
@@ -25,17 +26,21 @@ describe("API endpoint testing", () => {
       email: "johndoe@example.com",
       contactNumber: "1234567890",
     };
+
     const response = await request(app)
       .post(`/v1/${ROUTES.CUSTOMERS}`)
       .send(newCustomer);
+
     tempId = response.body.data._id;
+
     expect(response.status).toBe(200);
+
     expect(response.body.data).toMatchObject({
       _id: expect.any(String),
-      firstName: expect.any(String),
-      lastName: expect.any(String),
-      email: expect.any(String),
-      contactNumber: expect.any(String),
+      firstName: "John",
+      lastName: "Doe",
+      email: "johndoe@example.com",
+      contactNumber: "1234567890",
       deleted: false,
       __v: expect.any(Number),
     });
@@ -43,13 +48,15 @@ describe("API endpoint testing", () => {
 
   it("GET all customers", async () => {
     const response = await request(app).get(`/v1/${ROUTES.CUSTOMERS}`);
+
     expect(response.status).toBe(200);
+
     expect(response.body.data[0]).toMatchObject({
       _id: expect.any(String),
-      firstName: expect.any(String),
-      lastName: expect.any(String),
-      email: expect.any(String),
-      contactNumber: expect.any(String),
+      firstName: "John",
+      lastName: "Doe",
+      email: "johndoe@example.com",
+      contactNumber: "1234567890",
       deleted: false,
       __v: expect.any(Number),
     });
@@ -60,28 +67,31 @@ describe("API endpoint testing", () => {
       `/v1/${ROUTES.CUSTOMERS}/${tempId}`
     );
     expect(response.status).toBe(200);
+
     expect(response.body.data).toMatchObject({
       _id: expect.any(String),
-      firstName: expect.any(String),
-      lastName: expect.any(String),
-      email: expect.any(String),
-      contactNumber: expect.any(String),
+      firstName: "John",
+      lastName: "Doe",
+      email: "johndoe@example.com",
+      contactNumber: "1234567890",
       deleted: false,
+      __v: expect.any(Number),
     });
   });
 
   it("PATCH one customer", async () => {
     const response = await request(app)
       .patch(`/v1/${ROUTES.CUSTOMERS}/${tempId}`)
-      .send({ firstName: "New test name" });
+      .send({ firstName: "PatchedTestName" });
     expect(response.status).toBe(200);
     expect(response.body.data).toMatchObject({
-      _id: expect.any(String),
-      firstName: expect.any(String),
-      lastName: expect.any(String),
-      email: expect.any(String),
-      contactNumber: expect.any(String),
+      _id: tempId,
+      firstName: "PatchedTestName",
+      lastName: "Doe",
+      email: "johndoe@example.com",
+      contactNumber: "1234567890",
       deleted: false,
+      __v: expect.any(Number),
     });
   });
 
@@ -89,14 +99,73 @@ describe("API endpoint testing", () => {
     const response = await request(app).patch(
       `/v1/${ROUTES.CUSTOMERS}/delete/${tempId}`
     );
+
     expect(response.status).toBe(200);
+
     expect(response.body.data).toMatchObject({
-      _id: expect.any(String),
-      firstName: expect.any(String),
-      lastName: expect.any(String),
-      email: expect.any(String),
-      contactNumber: expect.any(String),
+      _id: tempId,
+      firstName: "PatchedTestName",
+      lastName: "Doe",
+      email: "johndoe@example.com",
+      contactNumber: "1234567890",
       deleted: true,
+      __v: expect.any(Number),
     });
+  });
+});
+
+describe("API endpoint testing - status 4xx", () => {
+  it("GET one customer - non existant ID", async () => {
+    const response = await request(app).get(
+      `/v1/${ROUTES.CUSTOMERS}/${wrongId}`
+    );
+    expect(response.status).toBe(404);
+
+    expect(response.body.data).toEqual([]);
+  });
+
+  it("GET one customer - wrong ID format", async () => {
+    const response = await request(app).get(`/v1/${ROUTES.CUSTOMERS}/1111`);
+    expect(response.status).toBe(400);
+
+    expect(response.body.data).toEqual([]);
+  });
+
+  it("PATCH one customer - non existant ID", async () => {
+    const response = await request(app)
+      .patch(`/v1/${ROUTES.CUSTOMERS}/${wrongId}`)
+      .send({ firstName: "PatchedTestName" });
+    expect(response.status).toBe(404);
+
+    expect(response.body.data).toEqual([]);
+  });
+
+  it("PATCH one customer - wrong ID format", async () => {
+    const response = await request(app)
+      .patch(`/v1/${ROUTES.CUSTOMERS}/$111`)
+      .send({ firstName: "PatchedTestName" });
+    expect(response.status).toBe(400);
+
+    expect(response.body.data).toEqual([]);
+  });
+
+  it("DELETE one customer - non existant ID", async () => {
+    const response = await request(app).patch(
+      `/v1/${ROUTES.CUSTOMERS}/delete/${wrongId}`
+    );
+
+    expect(response.status).toBe(404);
+
+    expect(response.body.data).toEqual([]);
+  });
+
+  it("DELETE one customer - wrong ID format", async () => {
+    const response = await request(app).patch(
+      `/v1/${ROUTES.CUSTOMERS}/delete/111`
+    );
+
+    expect(response.status).toBe(400);
+
+    expect(response.body.data).toEqual([]);
   });
 });

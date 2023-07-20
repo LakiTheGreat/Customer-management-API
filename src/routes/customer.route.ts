@@ -12,7 +12,7 @@ import {
 const router = express.Router();
 
 // 1) Params middleware
-//Checks if the id in the requests is of the correct format
+//Checks if the id in the requests is of the correct format (ObjectId format for MongoDB)
 router.param("id", checkIdFormat);
 
 // 2) Routes
