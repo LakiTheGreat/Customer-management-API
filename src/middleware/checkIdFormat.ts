@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { JSEND_STATUS } from "../constants";
 
-export default function checkIdFormat(
+export const checkIdFormat = (
   req: Request,
   res: Response,
   next: NextFunction,
   id: string
-) {
+) => {
   // Regular expression to match MongoDB ObjectId format
   const objectIdPattern = /^[0-9a-fA-F]{24}$/;
 
@@ -18,4 +18,4 @@ export default function checkIdFormat(
     });
   }
   next();
-}
+};

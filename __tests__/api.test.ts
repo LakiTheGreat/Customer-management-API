@@ -149,6 +149,15 @@ describe("API endpoint testing - status 4xx", () => {
     expect(response.body.data).toEqual([]);
   });
 
+  it("PATCH one customer - invalid request", async () => {
+    const response = await request(app)
+      .patch(`/v1/${ROUTES.CUSTOMERS}/${tempId}`)
+      .send({ name: "PatchedTestName" });
+    expect(response.status).toBe(400);
+
+    expect(response.body.data).toEqual([]);
+  });
+
   it("DELETE one customer - non existant ID", async () => {
     const response = await request(app).patch(
       `/v1/${ROUTES.CUSTOMERS}/delete/${wrongId}`
