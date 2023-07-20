@@ -9,7 +9,7 @@ Steps to run app:
 
 `*) Endpoint descriptions can be found in Postman collection - Customer management/Customers (click on the folder)`
 
-# Aditional comments
+# Additional comments
 
 - Complex file structure is unnecessary for this simple project, but it was implemented to showcase best practices that enable easy scalability.
-- Responses are formated in JSend format.
+- Responses are formatted in JSend format.
