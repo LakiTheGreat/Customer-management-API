@@ -6,4 +6,10 @@ export const mongooseObj = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   },
+  options_test: {
+    dbName: "customer_management_test",
+    autoIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
 };
