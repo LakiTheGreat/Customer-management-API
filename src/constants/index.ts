@@ -3,3 +3,7 @@ export const JSEND_STATUS = {
   FAIL: "fail",
   ERROR: "error",
 };
+
+export const ROUTES = {
+  CUSTOMERS: "customers",
+};
