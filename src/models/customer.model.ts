@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const customerSchema = new Schema({
-  fistName: { type: String, required: [true, "First name is mandatory."] },
+  firstName: { type: String, required: [true, "First name is mandatory."] },
   lastName: { type: String, required: [true, "Last name is mandatory"] },
   email: { type: String, required: [true, "Please enter email"] },
   contactNumber: {

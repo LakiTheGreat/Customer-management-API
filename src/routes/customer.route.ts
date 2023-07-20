@@ -18,8 +18,8 @@ router.param("id", checkIdFormat);
 // 2) Routes
 router.get("/", getCustomers);
 router.post("/", createCustomer);
+router.patch("/delete/:id", deleteCustomer);
 router.get("/:id", getOneCustomer);
 router.patch("/:id", patchCustomer);
-router.delete("/:id", deleteCustomer);
 
 export default router;
