@@ -6,18 +6,19 @@ export const checkPatchRequest = (
   res: Response,
   next: NextFunction
 ) => {
-  console.log(req.body);
-  const attributesToCheck = ["firstName", "lastName", "contactNumber", "email"];
+  const allowedAttributes = ["firstName", "lastName", "contactNumber", "email"];
+  const requestBodyKeys = Object.keys(req.body);
 
-  const hasAtLeastOneAttribute = attributesToCheck.some((attribute) =>
-    req.body.hasOwnProperty(attribute)
+  // Check if all properties in req.body are either in the allowedAttributes array or not present
+  const hasOnlyAllowedAttributes = requestBodyKeys.every((attribute) =>
+    allowedAttributes.includes(attribute)
   );
 
-  if (!hasAtLeastOneAttribute) {
+  if (!hasOnlyAllowedAttributes) {
     return res.status(400).json({
       status: JSEND_STATUS.FAIL,
       message:
-        "At least one of the attributes must be provided: firstName, lastName, email or contactNumber.",
+        "Invalid attributes provided. Only firstName, lastName, email, or contactNumber are allowed.",
       data: [],
     });
   }

@@ -149,10 +149,19 @@ describe("API endpoint testing - status 4xx", () => {
     expect(response.body.data).toEqual([]);
   });
 
-  it("PATCH one customer - invalid request", async () => {
+  it("PATCH one customer - invalid request (wrong field name)", async () => {
     const response = await request(app)
       .patch(`/v1/${ROUTES.CUSTOMERS}/${tempId}`)
       .send({ name: "PatchedTestName" });
+    expect(response.status).toBe(400);
+
+    expect(response.body.data).toEqual([]);
+  });
+
+  it("PATCH one customer - invalid request (additional field with wrong name)", async () => {
+    const response = await request(app)
+      .patch(`/v1/${ROUTES.CUSTOMERS}/${tempId}`)
+      .send({ firstName: "PatchedTestName", nameLast: "John" });
     expect(response.status).toBe(400);
 
     expect(response.body.data).toEqual([]);
