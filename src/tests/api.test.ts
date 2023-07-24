@@ -1,9 +1,9 @@
 import request from "supertest";
 import mongoose from "mongoose";
 
-import app from "../src/app";
-import { mongooseObj } from "../src/config";
-import { ROUTES } from "../src/constants";
+import app from "../app";
+import { mongooseObj } from "../config";
+import { ROUTES } from "../constants/index";
 
 let tempId = "";
 let wrongId = "111111111111111111111111";
