@@ -1,6 +1,6 @@
 export const JSEND_STATUS = {
   SUCCESS: "success",
-  FAIL: "fail",
+  FAIL: "failed",
   ERROR: "error",
 };
 
