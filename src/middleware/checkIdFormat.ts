@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { JSEND_STATUS } from "../constants";
+import jSendResponse from "../config/jSendResponse";
 
 export const checkIdFormat = (
   req: Request,
@@ -11,11 +12,12 @@ export const checkIdFormat = (
   const objectIdPattern = /^[0-9a-fA-F]{24}$/;
 
   if (!id || !objectIdPattern.test(id)) {
-    return res.status(400).json({
-      status: JSEND_STATUS.FAIL,
-      message: "Invalid 'id' format",
-      data: [],
-    });
+    return res.status(400).json(
+      jSendResponse({
+        status: JSEND_STATUS.FAIL,
+        message: "Invalid 'id' format",
+      })
+    );
   }
   next();
 };

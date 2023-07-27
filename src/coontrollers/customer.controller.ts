@@ -16,7 +16,6 @@ export const getCustomers = async (req: Request, res: Response) => {
     if (customers.length) {
       res.status(200).json(
         jSendResponse({
-          status: JSEND_STATUS.SUCCESS,
           message: "List of all customers",
           data: customers,
         })
@@ -24,7 +23,7 @@ export const getCustomers = async (req: Request, res: Response) => {
     } else {
       res.status(404).json(
         jSendResponse({
-          status: JSEND_STATUS.SUCCESS,
+          status: JSEND_STATUS.FAIL,
           message: "There are no customers in the database",
         })
       );
@@ -44,7 +43,6 @@ export const getOneCustomer = async (req: Request, res: Response) => {
     if (customer) {
       res.status(200).json(
         jSendResponse({
-          status: JSEND_STATUS.SUCCESS,
           message: "Customer for the provided ID",
           data: customer,
         })
@@ -72,7 +70,6 @@ export const createCustomer = async (req: Request, res: Response) => {
     if (customer) {
       res.status(200).json(
         jSendResponse({
-          status: JSEND_STATUS.SUCCESS,
           message: "Created customer",
           data: customer,
         })
@@ -93,7 +90,6 @@ export const patchCustomer = async (req: Request, res: Response) => {
     if (customer) {
       res.status(200).json(
         jSendResponse({
-          status: JSEND_STATUS.SUCCESS,
           message: "Customer is patched",
           data: customer,
         })
@@ -128,11 +124,12 @@ export const deleteCustomer = async (req: Request, res: Response) => {
         })
       );
     } else {
-      res.status(200).json({
-        status: JSEND_STATUS.SUCCESS,
-        message: "Customer for the provided ID was successfuly deleted",
-        data: customer,
-      });
+      res.status(200).json(
+        jSendResponse({
+          message: "Customer for the provided ID was successfuly deleted",
+          data: customer,
+        })
+      );
     }
   } catch (error) {
     res
