@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { JSEND_STATUS } from "../constants";
-import jSendResponse from "../config/jSendResponse";
+import httpStatus from "http-status";
+
+import ApiError from "../config/ApiError";
 
 export const checkPatchRequest = (
   req: Request,
@@ -16,12 +17,9 @@ export const checkPatchRequest = (
   );
 
   if (!hasOnlyAllowedAttributes) {
-    return res.status(400).json(
-      jSendResponse({
-        status: JSEND_STATUS.FAIL,
-        message:
-          "Invalid attributes provided. Only firstName, lastName, email, or contactNumber are allowed.",
-      })
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "Invalid attributes provided. Only firstName, lastName, email, or contactNumber are allowed."
     );
   }
 

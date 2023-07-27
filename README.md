@@ -12,4 +12,3 @@ Steps to run app:
 # Additional comments
 
 - Complex file structure is unnecessary for this simple project, but it was implemented to showcase best practices that enable easy scalability.
-- Responses are formatted in JSend format.

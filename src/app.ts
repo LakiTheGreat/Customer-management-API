@@ -3,8 +3,9 @@ import dotenv from "dotenv";
 import express from "express";
 
 import { router } from "./routes";
-import { JSEND_STATUS } from "./constants";
-import jSendResponse from "./config/jSendResponse";
+import ApiError from "./config/ApiError";
+import httpStatus from "http-status";
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 
@@ -21,13 +22,14 @@ app.use(express.json()); //allows the use of .body in requst (req.body)
 app.use("/v1", router);
 
 // 4) Unknown route
-app.all("*", (req, res) => {
-  res.status(404).json(
-    jSendResponse({
-      status: JSEND_STATUS.FAIL,
-      message: `Can't find route: ${req.originalUrl}`,
-    })
+app.all("*", (req) => {
+  throw new ApiError(
+    httpStatus.NOT_FOUND,
+    `Can't finde route: ${req.originalUrl}`
   );
 });
+
+//5) Error handling middlware
+app.use(errorHandler);
 
 export default app;

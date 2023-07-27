@@ -1,5 +1,6 @@
 import request from "supertest";
 import mongoose from "mongoose";
+import httpStatus from "http-status";
 
 import app from "../app";
 import { mongooseObj } from "../config";
@@ -31,11 +32,11 @@ describe("API endpoint testing - status 200", () => {
       .post(`/v1/${ROUTES.CUSTOMERS}`)
       .send(newCustomer);
 
-    tempId = response.body.data._id;
+    tempId = response.body._id;
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(httpStatus.CREATED);
 
-    expect(response.body.data).toMatchObject({
+    expect(response.body).toMatchObject({
       _id: expect.any(String),
       firstName: "John",
       lastName: "Doe",
@@ -49,9 +50,9 @@ describe("API endpoint testing - status 200", () => {
   it("GET all customers", async () => {
     const response = await request(app).get(`/v1/${ROUTES.CUSTOMERS}`);
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(httpStatus.OK);
 
-    expect(response.body.data[0]).toMatchObject({
+    expect(response.body[0]).toMatchObject({
       _id: expect.any(String),
       firstName: "John",
       lastName: "Doe",
@@ -66,9 +67,9 @@ describe("API endpoint testing - status 200", () => {
     const response = await request(app).get(
       `/v1/${ROUTES.CUSTOMERS}/${tempId}`
     );
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(httpStatus.OK);
 
-    expect(response.body.data).toMatchObject({
+    expect(response.body).toMatchObject({
       _id: expect.any(String),
       firstName: "John",
       lastName: "Doe",
@@ -84,7 +85,7 @@ describe("API endpoint testing - status 200", () => {
       .patch(`/v1/${ROUTES.CUSTOMERS}/${tempId}`)
       .send({ firstName: "PatchedTestName" });
     expect(response.status).toBe(200);
-    expect(response.body.data).toMatchObject({
+    expect(response.body).toMatchObject({
       _id: tempId,
       firstName: "PatchedTestName",
       lastName: "Doe",
@@ -100,9 +101,9 @@ describe("API endpoint testing - status 200", () => {
       `/v1/${ROUTES.CUSTOMERS}/delete/${tempId}`
     );
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(httpStatus.OK);
 
-    expect(response.body.data).toMatchObject({
+    expect(response.body).toMatchObject({
       _id: tempId,
       firstName: "PatchedTestName",
       lastName: "Doe",
@@ -119,71 +120,54 @@ describe("API endpoint testing - status 4xx", () => {
     const response = await request(app).get(
       `/v1/${ROUTES.CUSTOMERS}/${wrongId}`
     );
-    expect(response.status).toBe(404);
-
-    expect(response.body.data).toEqual([]);
+    expect(response.status).toBe(httpStatus.NOT_FOUND);
+    expect(response.body.statusCode).toEqual(httpStatus.NOT_FOUND);
   });
-
   it("GET one customer - wrong ID format", async () => {
     const response = await request(app).get(`/v1/${ROUTES.CUSTOMERS}/1111`);
-    expect(response.status).toBe(400);
-
-    expect(response.body.data).toEqual([]);
+    expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    expect(response.body.statusCode).toEqual(httpStatus.BAD_REQUEST);
   });
-
   it("PATCH one customer - non existant ID", async () => {
     const response = await request(app)
       .patch(`/v1/${ROUTES.CUSTOMERS}/${wrongId}`)
       .send({ firstName: "PatchedTestName" });
-    expect(response.status).toBe(404);
-
-    expect(response.body.data).toEqual([]);
+    expect(response.status).toBe(httpStatus.NOT_FOUND);
+    expect(response.body.statusCode).toEqual(httpStatus.NOT_FOUND);
   });
-
   it("PATCH one customer - wrong ID format", async () => {
     const response = await request(app)
       .patch(`/v1/${ROUTES.CUSTOMERS}/$111`)
       .send({ firstName: "PatchedTestName" });
-    expect(response.status).toBe(400);
-
-    expect(response.body.data).toEqual([]);
+    expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    expect(response.body.statusCode).toEqual(httpStatus.BAD_REQUEST);
   });
-
   it("PATCH one customer - invalid request (wrong field name)", async () => {
     const response = await request(app)
       .patch(`/v1/${ROUTES.CUSTOMERS}/${tempId}`)
       .send({ name: "PatchedTestName" });
-    expect(response.status).toBe(400);
-
-    expect(response.body.data).toEqual([]);
+    expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    expect(response.body.statusCode).toEqual(httpStatus.BAD_REQUEST);
   });
-
   it("PATCH one customer - invalid request (additional field with wrong name)", async () => {
     const response = await request(app)
       .patch(`/v1/${ROUTES.CUSTOMERS}/${tempId}`)
       .send({ firstName: "PatchedTestName", nameLast: "John" });
-    expect(response.status).toBe(400);
-
-    expect(response.body.data).toEqual([]);
+    expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    expect(response.body.statusCode).toEqual(httpStatus.BAD_REQUEST);
   });
-
   it("DELETE one customer - non existant ID", async () => {
     const response = await request(app).patch(
       `/v1/${ROUTES.CUSTOMERS}/delete/${wrongId}`
     );
-
-    expect(response.status).toBe(404);
-
-    expect(response.body.data).toEqual([]);
+    expect(response.status).toBe(httpStatus.NOT_FOUND);
+    expect(response.body.statusCode).toEqual(httpStatus.NOT_FOUND);
   });
-
   it("DELETE one customer - wrong ID format", async () => {
     const response = await request(app).patch(
       `/v1/${ROUTES.CUSTOMERS}/delete/111`
     );
-
-    expect(response.status).toBe(400);
-
-    expect(response.body.data).toEqual([]);
+    expect(response.status).toBe(httpStatus.BAD_REQUEST);
+    expect(response.body.statusCode).toEqual(httpStatus.BAD_REQUEST);
   });
 });

@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { JSEND_STATUS } from "../constants";
-import jSendResponse from "../config/jSendResponse";
+import { ObjectId } from "mongodb";
+import httpStatus from "http-status";
+
+import ApiError from "../config/ApiError";
 
 export const checkIdFormat = (
   req: Request,
@@ -8,16 +10,8 @@ export const checkIdFormat = (
   next: NextFunction,
   id: string
 ) => {
-  // Regular expression to match MongoDB ObjectId format
-  const objectIdPattern = /^[0-9a-fA-F]{24}$/;
-
-  if (!id || !objectIdPattern.test(id)) {
-    return res.status(400).json(
-      jSendResponse({
-        status: JSEND_STATUS.FAIL,
-        message: "Invalid 'id' format",
-      })
-    );
+  if (!ObjectId.isValid(req.params.id)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid 'id' format");
   }
   next();
 };
