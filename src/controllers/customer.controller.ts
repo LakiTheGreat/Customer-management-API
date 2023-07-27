@@ -9,7 +9,7 @@ import {
   patchCustomerService,
 } from "../services";
 import ApiError from "../config/ApiError";
-import { catchAsync } from "../middleware/utils/catchAsync";
+import { catchAsync } from "../utils/catchAsync";
 
 export const getCustomers = catchAsync(async (req: Request, res: Response) => {
   const customers = await getAllCustomersService();

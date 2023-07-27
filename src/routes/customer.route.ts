@@ -6,7 +6,7 @@ import {
   createCustomer,
   deleteCustomer,
   patchCustomer,
-} from "../coontrollers/customer.controller";
+} from "../controllers/customer.controller";
 import { checkIdFormat, checkPatchRequest } from "../middleware";
 
 const router = express.Router();
