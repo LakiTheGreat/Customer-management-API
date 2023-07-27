@@ -21,7 +21,7 @@ app.use(express.json()); //allows the use of .body in requst (req.body)
 app.use("/v1", router);
 
 // 4) Unknown route
-app.all("*", (req, res, next) => {
+app.all("*", (req, res) => {
   res.status(404).json(
     jSendResponse({
       status: JSEND_STATUS.FAIL,
