@@ -19,8 +19,12 @@ export const errorHandler = (
       statusCode: httpStatus.BAD_REQUEST,
       message: err.message,
     });
+  } else if (err.name === "StrictModeError") {
+    return res.status(httpStatus.BAD_REQUEST).json({
+      statusCode: httpStatus.BAD_REQUEST,
+      message: "Validation error - passed field/s don't match mongoose schema",
+    });
   }
-  console.log("err", err);
   return res.status(err.statusCode || httpStatus.INTERNAL_SERVER_ERROR).json({
     statusCode: err.statusCode || httpStatus.INTERNAL_SERVER_ERROR,
     message: err.message || "error",

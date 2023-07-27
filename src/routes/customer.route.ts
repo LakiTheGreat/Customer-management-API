@@ -7,7 +7,7 @@ import {
   deleteCustomer,
   patchCustomer,
 } from "../controllers/customer.controller";
-import { checkIdFormat, checkPatchRequest } from "../middleware";
+import { checkIdFormat } from "../middleware";
 
 const router = express.Router();
 
@@ -20,6 +20,6 @@ router.get("/", getCustomers);
 router.post("/", createCustomer);
 router.patch("/delete/:id", deleteCustomer);
 router.get("/:id", getOneCustomer);
-router.patch("/:id", checkPatchRequest, patchCustomer);
+router.patch("/:id", patchCustomer);
 
 export default router;
