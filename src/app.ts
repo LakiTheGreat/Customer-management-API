@@ -22,14 +22,12 @@ app.use("/v1", router);
 
 // 4) Unknown route
 app.all("*", (req, res, next) => {
-  res
-    .status(404)
-    .json(
-      jSendResponse({
-        status: JSEND_STATUS.FAIL,
-        message: `Can't find ${req.originalUrl}route`,
-      })
-    );
+  res.status(404).json(
+    jSendResponse({
+      status: JSEND_STATUS.FAIL,
+      message: `Can't find route: ${req.originalUrl}`,
+    })
+  );
 });
 
 export default app;
