@@ -8,7 +8,6 @@ import {
   getOneCustomerService,
   patchCustomerService,
 } from "../services";
-import { JSEND_STATUS } from "../constants";
 import ApiError from "../config/ApiError";
 import { catchAsync } from "../middleware/utils/catchAsync";
 

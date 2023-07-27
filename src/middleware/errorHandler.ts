@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import httpStatus from "http-status";
 
 import ApiError from "../config/ApiError";
-import { JSEND_STATUS } from "../constants";
 
 export const errorHandler = (
   err: any,
