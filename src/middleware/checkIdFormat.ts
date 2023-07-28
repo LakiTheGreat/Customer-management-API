@@ -10,7 +10,7 @@ export const checkIdFormat = (
   next: NextFunction
 ) => {
   if (!ObjectId.isValid(req.params.id)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid 'id' format");
+    throw new ApiError(httpStatus.UNPROCESSABLE_ENTITY, "Invalid 'id' format");
   }
   next();
 };

@@ -125,8 +125,8 @@ describe("API endpoint testing - status 4xx", () => {
   });
   it("GET one customer - wrong ID format", async () => {
     const response = await request(app).get(`/v1/${ROUTES.CUSTOMERS}/1111`);
-    expect(response.status).toBe(httpStatus.BAD_REQUEST);
-    expect(response.body.statusCode).toEqual(httpStatus.BAD_REQUEST);
+    expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+    expect(response.body.statusCode).toEqual(httpStatus.UNPROCESSABLE_ENTITY);
   });
   it("PATCH one customer - non existant ID", async () => {
     const response = await request(app)
@@ -139,8 +139,8 @@ describe("API endpoint testing - status 4xx", () => {
     const response = await request(app)
       .patch(`/v1/${ROUTES.CUSTOMERS}/$111`)
       .send({ firstName: "PatchedTestName" });
-    expect(response.status).toBe(httpStatus.BAD_REQUEST);
-    expect(response.body.statusCode).toEqual(httpStatus.BAD_REQUEST);
+    expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+    expect(response.body.statusCode).toEqual(httpStatus.UNPROCESSABLE_ENTITY);
   });
   it("PATCH one customer - invalid request (wrong field name)", async () => {
     const response = await request(app)
@@ -167,7 +167,7 @@ describe("API endpoint testing - status 4xx", () => {
     const response = await request(app).patch(
       `/v1/${ROUTES.CUSTOMERS}/delete/111`
     );
-    expect(response.status).toBe(httpStatus.BAD_REQUEST);
-    expect(response.body.statusCode).toEqual(httpStatus.BAD_REQUEST);
+    expect(response.status).toBe(httpStatus.UNPROCESSABLE_ENTITY);
+    expect(response.body.statusCode).toEqual(httpStatus.UNPROCESSABLE_ENTITY);
   });
 });
