@@ -1,0 +1,358 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Customer Management API",
+    "description": "Simple API with basic CRUD operations and error handling",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/v1",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/customers": {
+      "get": {
+        "tags": [
+          "customers"
+        ],
+        "summary": "GET a list of all customers",
+        "description": "GET a list of all customers that are not deleted",
+        "operationId": "getAllCustomers",
+        "responses": {
+          "200": {
+            "description": "List of all customers that are not deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomerFromDB"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "customers"
+        ],
+        "summary": "Creates a new customer",
+        "description": "Creates a new customer with provided data",
+        "operationId": "createCustomer",
+        "requestBody": {
+          "description": "Create new customer with this data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Customer created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerFromDB"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input object",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Field `xxxxxxxx` is not in schema and strict mode is set to throw."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{customerId}": {
+      "get": {
+        "tags": [
+          "customers"
+        ],
+        "summary": "GET ONE customer",
+        "description": "GET customer for the provided ID",
+        "operationId": "getOneCustomer",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "ID of the customer to update (MongoDB ObjectId)",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "objectId"
+            },
+            "example": "64b98c1fdb471b774f9deb43"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Customer object for the provided ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerFromDB"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer with provided ID was not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 404,
+                  "message": "Customer with provided ID was not found"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid ID format",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 422,
+                  "message": "Invalid 'id' format"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "customers"
+        ],
+        "summary": "Update customer",
+        "description": "Updates the information of a customer with provided ID",
+        "operationId": "updateCustomer",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "ID of the customer to update (MongoDB ObjectId)",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "objectId"
+            },
+            "example": "64b98c1fdb471b774f9deb43"
+          }
+        ],
+        "requestBody": {
+          "description": "Customer information to be updated",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Customer updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerFromDB"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Field `xxxxxxxx` is not in schema and strict mode is set to throw."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer with provided ID was not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 404,
+                  "message": "Customer with provided ID was not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/delete/{customerId}": {
+      "patch": {
+        "tags": [
+          "customers"
+        ],
+        "summary": "Shadow delete customer",
+        "description": "Shadow deletes the customer with the provided ID (changes delete from false to true)",
+        "operationId": "deleteCustomer",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "ID of the customer to update (MongoDB ObjectId)",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string",
+              "format": "objectId"
+            },
+            "example": "64b98c1fdb471b774f9deb43"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Customer deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerFromDBDelete"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Customer with provided ID was not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 404,
+                  "message": "Customer with provided ID was not found"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid ID format",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 422,
+                  "message": "Invalid 'id' format"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CustomerCreate": {
+        "required": [
+          "contactNumber",
+          "email",
+          "firstName",
+          "lastName"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "random.mail@gmail.com"
+          },
+          "contactNumber": {
+            "type": "string",
+            "example": "+38163021746"
+          }
+        }
+      },
+      "CustomerFromDB": {
+        "required": [
+          "__v",
+          "_id",
+          "contactNumber",
+          "deleted",
+          "email",
+          "firstName",
+          "lastName"
+        ],
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "objectId",
+            "example": "64b98c1fdb471b774f9deb43"
+          },
+          "firstName": {
+            "type": "string",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "example": "Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "random.mail@gmail.com"
+          },
+          "contactNumber": {
+            "type": "string",
+            "example": "+38163021746"
+          },
+          "deleted": {
+            "type": "boolean",
+            "example": false
+          },
+          "__v": {
+            "type": "number",
+            "example": 0
+          }
+        }
+      },
+      "CustomerFromDBDelete": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CustomerFromDB"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "deleted": {
+                "type": "boolean",
+                "example": true
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
