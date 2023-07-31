@@ -42,6 +42,11 @@ export const createCustomer = catchAsync(
     const customer = await createCustomerService(req.body);
     if (customer) {
       res.status(httpStatus.CREATED).json(customer);
+    } else {
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        "Unknown server error"
+      );
     }
   }
 );
