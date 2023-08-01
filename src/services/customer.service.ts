@@ -22,9 +22,7 @@ export const getAllCustomersService = async (queryParams: QueryParams) => {
   });
 
   if (sort) {
-    console.log(sort);
     const sortingFields = sort.split(",").join(" ");
-    console.log(sortingFields);
     customerList.sort(sortingFields);
   }
 
