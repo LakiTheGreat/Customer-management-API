@@ -13,29 +13,6 @@
   ],
   "paths": {
     "/customers": {
-      "get": {
-        "tags": [
-          "customers"
-        ],
-        "summary": "GET a list of all customers",
-        "description": "GET a list of all customers that are not deleted",
-        "operationId": "getAllCustomers",
-        "responses": {
-          "200": {
-            "description": "List of all customers that are not deleted",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CustomerFromDB"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": [
           "customers"
@@ -71,6 +48,31 @@
                 "example": {
                   "statusCode": 400,
                   "message": "Field `xxxxxxxx` is not in schema and strict mode is set to throw."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers?sort=firstName,lastName": {
+      "get": {
+        "tags": [
+          "customers"
+        ],
+        "summary": "GET a list of all customers",
+        "description": "GET a list of all customers that are not deleted, sorted by firstName and lastName, asc",
+        "operationId": "getAllCustomers",
+        "responses": {
+          "200": {
+            "description": "List of all customers that are not deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CustomerFromDB"
+                  }
                 }
               }
             }

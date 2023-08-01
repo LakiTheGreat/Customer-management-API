@@ -1,5 +1,11 @@
+import { ParsedQs } from "qs";
 import { CustomerModel } from "../models/customer.model";
 import { Customer } from "../types/customer";
+
+interface QueryParams {
+  [key: string]: string | string[] | ParsedQs | ParsedQs[] | undefined;
+  sort?: string;
+}
 
 const findOneCustomer = (id: string) => {
   return CustomerModel.findOne({
@@ -8,8 +14,21 @@ const findOneCustomer = (id: string) => {
   });
 };
 
-export const getAllCustomersService = async () => {
-  return await CustomerModel.find({ deleted: { $ne: true } });
+export const getAllCustomersService = async (queryParams: QueryParams) => {
+  const { sort } = queryParams;
+
+  const customerList = CustomerModel.find({
+    deleted: { $ne: true },
+  });
+
+  if (sort) {
+    console.log(sort);
+    const sortingFields = sort.split(",").join(" ");
+    console.log(sortingFields);
+    customerList.sort(sortingFields);
+  }
+
+  return await customerList.exec();
 };
 
 export const getOneCustomerService = async (id: string) => {

@@ -12,7 +12,7 @@ import ApiError from "../config/ApiError";
 import { catchAsync } from "../utils/catchAsync";
 
 export const getCustomers = catchAsync(async (req: Request, res: Response) => {
-  const customers = await getAllCustomersService();
+  const customers = await getAllCustomersService(req.query);
   if (customers.length) {
     res.status(httpStatus.OK).json(customers);
   } else {
