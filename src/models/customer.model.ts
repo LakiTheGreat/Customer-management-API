@@ -1,4 +1,5 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Query, Schema } from "mongoose";
+import { Customer } from "../types/customer";
 
 const customerSchema = new Schema(
   {
@@ -18,5 +19,10 @@ const customerSchema = new Schema(
     strict: "throw",
   }
 );
+
+customerSchema.pre<Query<Customer, Customer>>(/^find/, function (next) {
+  this.find({ deleted: { $ne: true } });
+  next();
+});
 
 export const CustomerModel = mongoose.model("Customer", customerSchema);

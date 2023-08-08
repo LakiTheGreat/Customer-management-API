@@ -10,16 +10,13 @@ interface QueryParams {
 const findOneCustomer = (id: string) => {
   return CustomerModel.findOne({
     _id: id,
-    deleted: { $ne: true },
   });
 };
 
 export const getAllCustomersService = async (queryParams: QueryParams) => {
   const { sort } = queryParams;
 
-  const customerList = CustomerModel.find({
-    deleted: { $ne: true },
-  });
+  const customerList = CustomerModel.find();
 
   if (sort) {
     const sortingFields = sort.split(",").join(" ");
