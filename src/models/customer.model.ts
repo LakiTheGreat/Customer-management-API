@@ -1,5 +1,6 @@
 import mongoose, { Query, Schema } from "mongoose";
 import { Customer } from "../types/customer";
+import { linkRegex } from "../constants";
 
 const customerSchema = new Schema(
   {
@@ -15,7 +16,16 @@ const customerSchema = new Schema(
       minlength: [2, "Last name must have at least 2 characters"],
       maxlength: [20, "Last can't have more then 20 characters"],
     },
-    email: { type: String, required: [true, "Please enter email"] },
+    email: {
+      type: String,
+      required: [true, "Please enter email"],
+      validate: {
+        validator: function (val: string) {
+          return val.match(linkRegex) ? true : false;
+        },
+        message: "Email was not in correct format",
+      },
+    },
     contactNumber: {
       type: String,
       required: [true, "Enter your contact number"],
