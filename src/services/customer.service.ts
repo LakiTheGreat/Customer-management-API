@@ -40,6 +40,7 @@ export const patchCustomerService = async (
 ) => {
   return await CustomerModel.findByIdAndUpdate(id, updatedCustomer, {
     new: true,
+    runValidators: true,
   });
 };
 
