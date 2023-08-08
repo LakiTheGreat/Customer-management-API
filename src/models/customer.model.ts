@@ -1,6 +1,7 @@
 import mongoose, { Query, Schema } from "mongoose";
+import isEmail from "validator/lib/isEmail";
+
 import { Customer } from "../types/customer";
-import { linkRegex } from "../constants";
 
 const customerSchema = new Schema(
   {
@@ -21,7 +22,7 @@ const customerSchema = new Schema(
       required: [true, "Please enter email"],
       validate: {
         validator: function (val: string) {
-          return val.match(linkRegex) ? true : false;
+          return isEmail(val);
         },
         message: "Email was not in correct format",
       },
