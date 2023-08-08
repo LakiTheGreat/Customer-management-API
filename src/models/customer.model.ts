@@ -20,6 +20,7 @@ const customerSchema = new Schema(
   }
 );
 
+//Adds check in every find query that removes deleted customers
 customerSchema.pre<Query<Customer, Customer>>(/^find/, function (next) {
   this.find({ deleted: { $ne: true } });
   next();
